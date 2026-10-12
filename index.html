@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Olivara Stays: a demo template for a curated holiday-villa rental site. Sample brand, listings and prices.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2314233B'/%3E%3Ccircle cx='32' cy='32' r='15' fill='none' stroke='%23E9C82C' stroke-width='5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Olivara Stays</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a numbered catalogue. Every stay is an entry with its own catalogue number;
+   pages run index -> entry. One 1180px wrapper, wide gutters, square-cornered plates. */
+:root{
+  --paper:#F1F3F0; --paper-2:#E5E9E5; --card:#FBFCFA; --ink:#14233B; --ink-2:#4A586C; --line:#C9D1D4;
+  --blue:#1E4BB8; --blue-ink:#FFFFFF; --lemon:#E9C82C; --lemon-ink:#2A2406; --olive:#5B6A36; --ok:#2F7D4F;
+  --display:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --body:"Albert Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"DM Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0D1524; --paper-2:#152036; --card:#121C30; --ink:#E9EDF3; --ink-2:#A5B0C2; --line:#2B3A54;
+  --blue:#8CABFF; --blue-ink:#0B1530; --lemon:#EFD24E; --lemon-ink:#2A2406; --olive:#AEBB80; --ok:#6FCB95; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0D1524; --paper-2:#152036; --card:#121C30; --ink:#E9EDF3; --ink-2:#A5B0C2; --line:#2B3A54;
+  --blue:#8CABFF; --blue-ink:#0B1530; --lemon:#EFD24E; --lemon-ink:#2A2406; --olive:#AEBB80; --ok:#6FCB95; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.08;margin:0;text-wrap:balance}
+h1{font-size:clamp(40px,6.4vw,80px);letter-spacing:-.01em}
+h2{font-size:clamp(28px,3.6vw,42px)}
+h3{font-size:22px;line-height:1.2}
+p{margin:0}
+em{font-family:var(--display);font-style:italic}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.wrap{max-width:1180px;margin-inline:auto;padding-inline:clamp(16px,4vw,40px)}
+.mono,.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.eyebrow{text-transform:uppercase;color:var(--ink-2);letter-spacing:.14em}
+.muted{color:var(--ink-2)}
+.lead{font-size:19px;max-width:60ch;color:var(--ink-2)}
+.prose{display:grid;gap:16px;max-width:65ch}
+.prose h3{margin-top:12px}
+
+/* buttons, chips */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 22px;border:1px solid var(--blue);
+  background:var(--blue);color:var(--blue-ink);font:500 15px/1 var(--body);text-decoration:none;cursor:pointer;border-radius:0}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--paper);filter:none}
+.btn.small{min-height:36px;padding:0 14px;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 13.5px/1 var(--body);padding:9px 14px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--ink);cursor:pointer;text-decoration:none}
+.chip[aria-pressed="true"],.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chip .mono{opacity:.7;margin-left:4px}
+.tag{display:inline-block;font:500 11.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:5px 8px;background:var(--lemon);color:var(--lemon-ink)}
+
+/* header */
+.demo{background:var(--ink);color:var(--paper);font:400 12px/1.4 var(--mono);text-align:center;padding:7px 16px;letter-spacing:.04em}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;flex-wrap:wrap;gap:0 28px;min-height:66px}
+.brand{font:500 21px/1 var(--display);letter-spacing:.34em;text-transform:uppercase;color:var(--ink);text-decoration:none;padding-block:12px}
+.nav{display:flex;flex-wrap:wrap;gap:2px 24px;margin-left:auto}
+.nav a{font:500 15px/1 var(--body);color:var(--ink);text-decoration:none;padding:10px 0;border-bottom:2px solid transparent}
+.nav a:hover{border-color:var(--line)}
+.nav a.on{border-color:var(--lemon)}
+.menu-btn{display:none;margin-left:auto}
+@media (max-width:880px){
+  .menu-btn{display:inline-flex}
+  .nav{display:none;width:100%;flex-direction:column;gap:0;margin:0;padding-bottom:14px}
+  .top.open .nav{display:flex}
+  .nav a{padding:13px 0;border-bottom:1px solid var(--line)}
+  .nav a.on{border-color:var(--lemon)}
+}
+
+/* sections */
+main{display:block;min-height:60vh}
+.sec{padding-block:clamp(44px,7vw,88px)}
+.sec + .sec{border-top:1px solid var(--line)}
+.sec-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px 24px;margin-bottom:32px}
+.sec-head > div{display:grid;gap:10px;min-width:0}
+.page-head{padding-block:clamp(36px,6vw,72px) 28px;display:grid;gap:16px}
+.page-head h1{font-size:clamp(38px,5.4vw,66px)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,4vw,56px);align-items:center;padding-block:clamp(32px,5vw,64px)}
+.hero-copy{display:grid;gap:22px;min-width:0}
+.plate{position:relative;margin:0;display:block;text-decoration:none;color:inherit}
+.plate canvas{display:block;width:100%;height:auto;aspect-ratio:4/3;background:var(--paper-2)}
+.plate.tall canvas{aspect-ratio:4/4.4}
+.plate figcaption{display:flex;justify-content:space-between;gap:12px;padding-top:10px;color:var(--ink-2)}
+@media (max-width:820px){.hero{grid-template-columns:1fr}.plate.tall canvas{aspect-ratio:4/3}}
+
+/* forms */
+.field{display:grid;gap:6px;min-width:0}
+.field > span,.field > label{font:500 12px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+input,select,textarea{width:100%;min-width:0;min-height:46px;padding:10px 12px;border:1px solid var(--line);border-radius:0;background:var(--card);color:var(--ink);font:400 16px/1.3 var(--body)}
+textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--blue);outline-offset:1px}
+.search{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:end;padding:18px;border:1px solid var(--ink);background:var(--card)}
+.search .btn{width:100%}
+
+@media (max-width:440px){.search{grid-template-columns:1fr}}
+.form{display:grid;gap:14px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:520px){.two{grid-template-columns:1fr}}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.check input{width:20px;min-height:20px;height:20px;margin-top:2px;flex:none}
+.note{border:1px solid var(--line);border-left:4px solid var(--lemon);background:var(--card);padding:14px 16px;font-size:15px}
+.note.ok{border-left-color:var(--ok)}
+
+/* catalogue cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:40px 24px}
+.card{display:grid;gap:12px;align-content:start;text-decoration:none;color:var(--ink);min-width:0}
+.card canvas{display:block;width:100%;height:auto;aspect-ratio:4/3;background:var(--paper-2);transition:transform .4s ease}
+.card .shot{overflow:hidden;position:relative}
+.card:hover canvas{transform:scale(1.03)}
+.card .shot .tag{position:absolute;left:10px;top:10px}
+.card .meta{display:flex;justify-content:space-between;gap:10px;color:var(--ink-2)}
+.card h3{font-size:23px}
+.card .facts{font-size:14.5px;color:var(--ink-2)}
+.card .price{font-size:14.5px}
+.card .price b{font-weight:600}
+@media (prefers-reduced-motion:reduce){.card canvas{transition:none}.card:hover canvas{transform:none}}
+
+/* filter bar */
+.filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:end;margin-bottom:18px}
+@media (max-width:820px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.filters{grid-template-columns:1fr}}
+.resultbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding-block:14px;border-top:1px solid var(--line);margin-bottom:28px}
+
+/* index table (list view) */
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+th{font:500 12px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);text-align:left;padding:10px 14px 10px 0;border-bottom:1px solid var(--ink);white-space:nowrap}
+td{padding:13px 14px 13px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td a{color:var(--ink);text-decoration:none;font-family:var(--display);font-size:19px}
+td a:hover{color:var(--blue)}
+
+/* regions index */
+.regions{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0 32px}
+.regions a{display:flex;align-items:baseline;gap:10px;padding:13px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;font-family:var(--display);font-size:22px}
+.regions a i{flex:1;border-bottom:1px dotted var(--line);transform:translateY(-4px)}
+.regions a span{font:400 13px/1 var(--mono);color:var(--ink-2)}
+.regions a:hover{color:var(--blue)}
+
+/* three ways, steps, people */
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 28px}
+@media (max-width:860px){.cols3{grid-template-columns:1fr}}
+.way{display:grid;gap:12px;align-content:start;min-width:0}
+.way p{color:var(--ink-2);font-size:16px}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 24px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;gap:8px;align-content:start;border-top:1px solid var(--ink);padding-top:14px;font-size:15.5px;color:var(--ink-2);min-width:0}
+.steps li::before{content:"Step " counter(s);font:500 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+.steps li b{font:400 21px/1.2 var(--display);color:var(--ink)}
+@media (max-width:860px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:440px){.steps{grid-template-columns:1fr}}
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:28px 24px}
+.person{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:14px;font-size:15.5px}
+.person dl{margin:6px 0 0;display:grid;gap:4px;color:var(--ink-2)}
+.person dt{font:500 11.5px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.person dd{margin:0 0 6px}
+
+/* dark band */
+.band{background:var(--ink);color:var(--paper)}
+.band .wrap{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:28px 48px;align-items:center;padding-block:clamp(40px,6vw,72px)}
+.band .eyebrow,.band .lead{color:var(--paper);opacity:.75}
+.band .btn{background:var(--lemon);border-color:var(--lemon);color:var(--lemon-ink)}
+.band ul{margin:0;padding:0;list-style:none;display:grid;gap:10px;font-size:16px}
+.band li{padding-left:22px;position:relative}
+.band li::before{content:"";position:absolute;left:0;top:.62em;width:10px;height:2px;background:var(--lemon)}
+@media (max-width:820px){.band .wrap{grid-template-columns:1fr}}
+
+/* journal */
+.rows{display:grid}
+.rowlink{display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:8px 24px;align-items:baseline;padding:20px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
+.rowlink:first-child{border-top:1px solid var(--ink)}
+.rowlink h3{font-size:25px}
+.rowlink p{color:var(--ink-2);font-size:16px;grid-column:2}
+.rowlink:hover h3{color:var(--blue)}
+@media (max-width:680px){.rowlink{grid-template-columns:1fr}.rowlink p{grid-column:1}}
+
+/* entry (detail) */
+.crumbs{display:flex;flex-wrap:wrap;gap:8px;color:var(--ink-2);padding-top:24px}
+.crumbs a{color:var(--ink-2)}
+.entry-head{display:grid;gap:14px;padding-block:18px 28px}
+.entry-head h1{font-size:clamp(36px,5vw,62px)}
+.keyfacts{display:flex;flex-wrap:wrap;gap:8px 28px;font-size:16px}
+.keyfacts b{font:400 22px/1 var(--display);margin-right:6px}
+.gallery{display:grid;grid-template-columns:2fr 1fr;gap:8px}
+.gallery .side{display:grid;gap:8px}
+.gallery canvas{display:block;width:100%;height:100%;object-fit:cover;aspect-ratio:4/3;background:var(--paper-2)}
+@media (max-width:640px){.gallery{grid-template-columns:1fr}.gallery .side{grid-template-columns:1fr 1fr}}
+.subnav{display:flex;flex-wrap:wrap;gap:6px 22px;padding-block:16px;border-bottom:1px solid var(--line);margin-top:18px}
+.subnav button{background:none;border:0;padding:6px 0;font:500 14.5px/1 var(--body);color:var(--ink);cursor:pointer;border-bottom:2px solid transparent}
+.subnav button:hover{border-color:var(--lemon)}
+.entry{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:clamp(28px,4vw,64px);align-items:start;padding-block:36px 72px}
+@media (max-width:940px){.entry{grid-template-columns:1fr}}
+.entry > aside{align-self:stretch;min-width:0}
+.entry-main{display:grid;gap:44px;min-width:0}
+.block{display:grid;gap:16px;scroll-margin-top:90px}
+.amen{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:0 24px;font-size:15.5px}
+.amen li{padding:10px 0;border-bottom:1px solid var(--line)}
+.kv{margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;font-size:15.5px}
+.kv dt,.kv dd{margin:0;padding:11px 0;border-bottom:1px solid var(--line)}
+.kv dd{text-align:right;font-variant-numeric:tabular-nums;padding-left:16px}
+.book{position:sticky;top:calc(env(safe-area-inset-top,0px) + 86px);border:1px solid var(--ink);background:var(--card);padding:22px;display:grid;gap:16px}
+@media (max-width:940px){.book{position:static}}
+.book .two{grid-template-columns:1fr}
+.book .from b{font:400 32px/1 var(--display)}
+.est{border-top:1px solid var(--line);padding-top:12px;font-size:15px;display:grid;gap:6px}
+.est div{display:flex;justify-content:space-between;gap:12px;font-variant-numeric:tabular-nums}
+.est .total{font-weight:600;border-top:1px solid var(--line);padding-top:8px}
+
+/* faq */
+details{border-bottom:1px solid var(--line)}
+details:first-of-type{border-top:1px solid var(--ink)}
+summary{cursor:pointer;list-style:none;padding:16px 28px 16px 0;position:relative;font:400 20px/1.3 var(--display)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:2px;top:14px;font:400 22px/1 var(--mono);color:var(--blue)}
+details[open] summary::after{content:"\2212"}
+details > p{padding:0 0 18px;color:var(--ink-2);max-width:65ch;font-size:16px}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:start}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+.stack{display:grid;gap:18px;min-width:0}
+.contact-list{margin:0;display:grid;gap:14px}
+.contact-list dt{font:500 12px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.contact-list dd{margin:4px 0 0;font-size:17px;user-select:all}
+.press{display:flex;flex-wrap:wrap;gap:12px 36px;align-items:baseline;font:400 22px/1 var(--display);color:var(--ink-2)}
+
+/* footer */
+footer{border-top:1px solid var(--ink);margin-top:0;padding-block:48px 36px;font-size:15px}
+.foot{display:grid;grid-template-columns:1.4fr repeat(3,minmax(0,1fr));gap:32px 28px}
+.foot h4{font:500 12px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin:0 0 12px}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.foot a{color:var(--ink);text-decoration:none}
+.foot a:hover{text-decoration:underline}
+.foot p{color:var(--ink-2);max-width:38ch;margin-top:12px}
+.legal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:36px;padding-top:18px;border-top:1px solid var(--line);color:var(--ink-2);font-size:13.5px}
+.legal button{background:none;border:1px solid var(--line);color:var(--ink);padding:6px 12px;font:500 13px/1 var(--body);cursor:pointer;border-radius:99px}
+@media (max-width:820px){.foot{grid-template-columns:1fr 1fr}}
+@media (max-width:460px){.foot{grid-template-columns:1fr}}
+</style>
+<style>
+/* second pass: picture-led hero, region tiles, motion. Plate tokens are fixed because they sit on pictures, not on the page ground. */
+:root{--plate-ink:#14233B;--plate-paper:#FFF9EC;--plate-sky:#CDE4F1;--plate-scrim:rgba(13,21,36,.8);--shadow:rgba(20,35,59,.32)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--shadow:rgba(0,0,0,.6)}}
+:root[data-theme="dark"]{--shadow:rgba(0,0,0,.6)}
+canvas[data-seed]{object-fit:cover}
+.plate{overflow:hidden}
+
+/* hero */
+.hero2{position:relative;display:grid;min-height:clamp(540px,54vw,720px);overflow:hidden;background:var(--plate-sky)}
+.hero2 canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero2-in{position:relative;display:grid;gap:18px;align-content:start;width:100%;padding-block:clamp(28px,4.5vw,60px) 130px}
+.hero2 h1{color:var(--plate-ink);max-width:14ch;font-size:clamp(42px,5.2vw,70px)}
+.hero2 .eyebrow{color:var(--plate-ink);opacity:.72}
+.hero2 .lead{color:var(--plate-ink);max-width:40ch;font-size:clamp(17px,1.5vw,19px)}
+.dock{position:relative;z-index:2;margin-top:-56px;grid-template-columns:repeat(4,minmax(0,1fr));box-shadow:0 22px 44px -26px var(--shadow)}
+@media (max-width:900px){.dock{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:440px){.dock{grid-template-columns:1fr}}
+
+/* cards */
+.card canvas{aspect-ratio:4/5}
+.card .shot::after{content:"View entry";position:absolute;left:10px;bottom:10px;font:500 11.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:8px 10px;background:var(--plate-paper);color:var(--plate-ink);transform:translateY(190%);transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.card:hover .shot::after,.card:focus-visible .shot::after{transform:none}
+.card h3{transition:color .2s ease}
+.card:hover h3{color:var(--blue)}
+
+/* region strip */
+.strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,22%);gap:16px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:16px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.tile{position:relative;display:block;scroll-snap-align:start;overflow:hidden;text-decoration:none;color:var(--plate-paper)}
+.tile canvas{display:block;width:100%;height:auto;aspect-ratio:3/4;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.tile:hover canvas{transform:scale(1.06)}
+.sec-head > .chips{display:flex}
+.tile .cap{position:absolute;inset:auto 0 0 0;display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:56px 16px 16px;background:linear-gradient(transparent,var(--plate-scrim))}
+.tile b{font:400 25px/1.1 var(--display)}
+.tile i{font:400 12px/1 var(--mono);font-style:normal;letter-spacing:.06em;white-space:nowrap}
+
+/* statement, ways, band */
+.say{align-items:center}
+.say h2{font-style:italic;font-size:clamp(32px,4.4vw,58px);max-width:15ch}
+.say .plate canvas{aspect-ratio:5/4}
+.way .plate canvas{aspect-ratio:4/5;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.way .plate:hover canvas{transform:scale(1.04)}
+.band .wrap{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:820px){.band .wrap{grid-template-columns:1fr}}
+
+/* motion */
+.btn{transition:transform .15s ease,filter .2s ease,background-color .2s ease,color .2s ease}
+.btn:active{transform:translateY(1px)}
+.nav a{transition:border-color .2s ease}
+@media (prefers-reduced-motion:no-preference){
+  @keyframes settle{from{transform:translateY(22px);opacity:.3}to{transform:none;opacity:1}}
+  @keyframes develop{from{transform:scale(1.15)}to{transform:scale(1)}}
+  @keyframes pagein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+  .in{animation:settle .8s cubic-bezier(.2,.7,.2,1) backwards}
+  .cards .card:nth-child(4n+2).in,.cols3 .way:nth-child(2).in,.steps li:nth-child(2).in{animation-delay:.08s}
+  .cards .card:nth-child(4n+3).in,.cols3 .way:nth-child(3).in,.steps li:nth-child(3).in{animation-delay:.16s}
+  .cards .card:nth-child(4n+4).in,.steps li:nth-child(4).in{animation-delay:.24s}
+  .card.in canvas,.tile.in canvas,.way.in canvas,.say.in canvas,.plate.in canvas{animation:develop 1.5s cubic-bezier(.2,.7,.2,1) backwards}
+  main.enter{animation:pagein .45s ease backwards}
+  .hero2-in > *{animation:rise .9s cubic-bezier(.2,.7,.2,1) backwards}
+  .hero2-in > :nth-child(2){animation-delay:.12s}
+  .hero2-in > :nth-child(3){animation-delay:.26s}
+  .dock{animation:rise .9s .38s cubic-bezier(.2,.7,.2,1) backwards}
+}
+@media (prefers-reduced-motion:reduce){.tile canvas,.way .plate canvas,.card .shot::after{transition:none}}
+</style>
+</head>
+<body>
+<div class="demo">Demo made by Ashikur Rahman Shaon · sample brand, listings, prices and contact details · nothing on this page is a real offer</div>
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="#home">Olivara</a>
+    <button class="btn ghost small menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="#villas" data-r="villas">Villas</a>
+      <a href="#stays" data-r="stays">Small stays</a>
+      <a href="#venues" data-r="venues">Venues</a>
+      <a href="#journal" data-r="journal">Journal</a>
+      <a href="#membership" data-r="membership">Membership</a>
+      <a href="#about" data-r="about">About</a>
+      <a href="#help" data-r="help">Help</a>
+    </nav>
+  </div>
+</header>
+<main id="app"></main>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#home">Olivara</a>
+        <p>A small catalogue of houses, guesthouses and venues in Italy, each one visited before it is listed.</p>
+      </div>
+      <div><h4>Stay</h4><ul><li><a href="#villas">Villas</a></li><li><a href="#stays">Small stays</a></li><li><a href="#venues">Venues</a></li></ul></div>
+      <div><h4>Read</h4><ul><li><a href="#journal">Journal</a></li><li><a href="#guides">Travel guides</a></li><li><a href="#membership">Membership</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#about">About and press</a></li><li><a href="#help">Contact and FAQ</a></li><li><a href="#terms">Terms, privacy, cookies</a></li></ul></div>
+    </div>
+    <div class="legal"><span>© 2026 Olivara (sample brand). Template content only. Demo made by Ashikur Rahman Shaon.</span><button type="button" id="themeBtn">Switch light / dark</button></div>
+  </div>
+</footer>
+<script>
+/* ---------- sample data (all invented for this template) ---------- */
+// villas: [number, name, region, setting, guests, bedrooms, baths, weekly price EUR, one-line note, flags]
+const VILLAS = [
+ [1,"The Founding Farmhouse","Tuscany","hills",14,7,7,6900,"Stone farmhouse on a ridge between two valleys, with the long table under the pergola that started this catalogue.","pool,chef"],
+ [2,"Swallows' Garden House","Piemonte","hills",8,4,4,3900,"A walled garden gone pleasantly wild, a short drive from the truffle towns.","pool"],
+ [3,"The Sweet Cottage","Umbria","hills",4,2,2,1750,"Two bedrooms, one fireplace and a view that does most of the entertaining.","dogs"],
+ [4,"Painter's Barn","Tuscany","hills",4,2,2,1900,"A working studio turned house, north light included.",""],
+ [5,"Watchtower in the Olive Groves","Puglia","coast",10,5,4,5200,"A fifteenth-century lookout with a roof terrace facing the Ionian.","pool"],
+ [6,"Lagoon Townhouse","Veneto","city",12,6,6,7800,"Four floors on a quiet canal, ten minutes on foot from the market.","new"],
+ [7,"Hilltop Stone House","Tuscany","hills",8,4,3,3600,"The last house on a white road; the village is a twenty-minute walk downhill.","pool,dogs"],
+ [8,"House Among Lava Walls","Sicily","coast",8,4,4,4400,"Low black-stone walls, prickly pear and a pool cut into the old terrace.","pool"],
+ [9,"Glass Pavilion in the Larches","Dolomites","mountain",2,1,1,1500,"One room, three glass sides, a wood stove and a sauna hut.",""],
+ [10,"Salento Palazzo","Puglia","city",10,5,5,5600,"Vaulted rooms around a courtyard in a baroque old town.","pool,chef"],
+ [11,"Vineyard Row House","Piemonte","hills",12,6,4,5100,"Surrounded by Nebbiolo on three sides; harvest happens outside the kitchen window.","pool"],
+ [12,"Art Deco Lake Villa","Lombardy","lake",10,6,4,6400,"A 1920s villa with its own jetty and a boathouse bedroom.","new"],
+ [13,"Shepherd's Lodge","Abruzzo","mountain",6,3,3,2300,"High pasture, thick walls and almost no phone signal.","dogs"],
+ [14,"Lemon Terrace House","Amalfi Coast","coast",14,7,7,11800,"Seven terraces of lemon trees step down to a private swimming platform.","pool,chef"],
+ [15,"Fisherman's Steps","Liguria","coast",6,3,2,2600,"A narrow pink house above the harbour, reached by 84 steps.",""],
+ [16,"The Eleventh-Century Keep","Umbria","hills",20,10,11,14500,"A fortified house with a chapel, a library and room for the whole family tree.","pool,chef"],
+ [17,"White Lamia","Puglia","coast",6,3,3,2900,"A whitewashed field house among dry-stone walls, restored by an architect couple.","pool"],
+ [18,"Cingoli Hills Estate","Le Marche","hills",14,7,7,6200,"Main house plus two annexes around a shared courtyard and kitchen garden.","pool,dogs"],
+ [19,"Alpine Village House","Dolomites","mountain",10,5,5,4800,"A timber house in a working village, with the bakery two doors down.",""],
+ [20,"Baroque Courtyard Apartment","Sicily","city",6,4,4,3100,"The piano nobile of a city palazzo, frescoed ceilings and all.","new"],
+ [21,"Maremma Coast House","Tuscany","coast",10,5,4,5400,"Pine woods behind, dunes in front, bicycles in the shed.","pool,dogs"],
+ [22,"Rose Grower's Cottage","Provence","hills",6,3,2,2400,"The catalogue's first house across the border, in a valley of rose fields.","pool"],
+ [23,"Silk Mill House","Lombardy","lake",12,6,5,5900,"A converted mill with double-height rooms and the stream still running beneath.","pool"],
+ [24,"Trullo Cluster","Puglia","hills",4,2,2,1600,"Five cone roofs, one fig tree, one outdoor shower.",""]
+].map(([n,name,region,setting,guests,beds,baths,price,note,flags])=>({kind:"villa",n,name,region,setting,guests,beds,baths,price,note,flags:flags?flags.split(","):[]}));
+
+// small stays: [number, name, region, setting, type, rooms, nightly price EUR, note]
+const STAYS = [
+ [1,"Palazzo of the Notary","Tuscany","city","Guesthouse",5,160,"Five rooms above a family-run enoteca."],
+ [2,"The Yellow Villa","Dolomites","mountain","Small hotel",11,190,"Breakfast on the veranda, hiking maps at the desk."],
+ [3,"Aunt's House","Piemonte","hills","B&B",3,120,"You are fed as if you were family."],
+ [4,"The Old Haberdashery","Dolomites","city","Apartments",4,140,"Shop drawers and brass rails kept exactly where they were."],
+ [5,"Rooftop in the Old Town","Puglia","city","Guesthouse",4,130,"A terrace over a sea of pale stone roofs."],
+ [6,"Tuna Fishery Rooms","Sicily","coast","Small hotel",9,210,"Boat sheds turned bedrooms on the water's edge."],
+ [7,"Monastery Cells","Puglia","hills","Guesthouse",6,150,"Six quiet rooms around a cloister garden."],
+ [8,"Florentine Loft","Tuscany","city","Apartments",2,180,"A former workshop with iron windows."],
+ [9,"Lakeside Rooms","Lombardy","lake","B&B",8,170,"Eight rooms, all with water in view."],
+ [10,"Dammuso on the Island","Sicily","coast","House",3,200,"Domed lava-stone rooms and a caper garden."],
+ [11,"Cobbled Street House","Umbria","city","B&B",2,110,"Two rooms and a lemon tree in the courtyard."],
+ [12,"Hill Fort Rooms","Le Marche","hills","Guesthouse",5,125,"A hamlet with one bar, one church and this."]
+].map(([n,name,region,setting,type,rooms,price,note])=>({kind:"stay",n,name,region,setting,type,rooms,price,note}));
+
+// venues: [number, name, region, setting, capacity, uses, note]
+const VENUES = [
+ [1,"Sea Wedding Terrace","Sicily","coast",250,"wedding,corporate,photoshoot","Dinner tables on the old salt quay."],
+ [2,"Courtyard for Fifty","Puglia","city",50,"wedding,photoshoot","Candlelit, intimate and entirely private."],
+ [3,"Castle Above the Valley","Tuscany","hills",200,"wedding,corporate,photoshoot","Ceremony in the keep, dancing in the granary."],
+ [4,"Farm Barn","Tuscany","hills",80,"wedding,retreat,photoshoot","Long tables in the hay barn, yoga in the orchard."],
+ [5,"Estate with Chapel","Umbria","hills",70,"wedding,corporate","A consecrated chapel a short walk from the house."],
+ [6,"Masseria by the Sea","Puglia","coast",400,"wedding,corporate,photoshoot","The largest space in the catalogue."],
+ [7,"Twelfth-Century Monastery","Umbria","hills",50,"retreat,corporate,photoshoot","Silence comes as standard."],
+ [8,"Lake Boathouse","Lombardy","lake",120,"wedding,corporate","Guests arrive by boat."]
+].map(([n,name,region,setting,cap,uses,note])=>({kind:"venue",n,name,region,setting,cap,uses:uses.split(","),note}));
+
+const ARTICLES = [
+ ["Editor's pick","Five places to wake up in the mountains","Timber houses, glass pavilions and one very good breakfast.",6],
+ ["Slow travel","Amsterdam to Italy by train","Two changes, one night train, and why the journey is half the holiday.",9],
+ ["A perfect weekend","Saturday in Turin with a ceramicist","Flea market at eight, vermouth at six.",5],
+ ["Makers","The linen weavers of the Tiber valley","A family mill that still runs its 1930s looms.",7],
+ ["Food","What to order in a Ligurian bakery","Focaccia rules, written down at last.",4],
+ ["Road trip","Piedmont in an electric car","Where to charge, where to stop, where to stay longer than planned.",8]
+].map(([cat,title,blurb,mins])=>({cat,title,blurb,mins}));
+
+const GUIDES = [
+ ["Tuscany","Val d'Orcia without the coach tours",18],["Puglia","Salento, town by town",22],["Piemonte","Langhe and Monferrato tables",16],
+ ["Sicily","The south-east corner",20],["Dolomites","Walks that end at a hut",14],["Umbria","Market days and hill towns",15]
+].map(([region,title,places])=>({region,title,places}));
+
+const REGION_INFO = {
+ "Tuscany":"Florence (FLR) or Pisa (PSA)","Piemonte":"Turin (TRN) or Milan Malpensa (MXP)","Umbria":"Perugia (PEG) or Rome Fiumicino (FCO)",
+ "Puglia":"Bari (BRI) or Brindisi (BDS)","Veneto":"Venice (VCE) or Treviso (TSF)","Sicily":"Catania (CTA) or Palermo (PMO)",
+ "Dolomites":"Bolzano (BZO), Verona (VRN) or Innsbruck (INN)","Lombardy":"Milan Linate (LIN) or Bergamo (BGY)","Abruzzo":"Pescara (PSR) or Rome Fiumicino (FCO)",
+ "Amalfi Coast":"Naples (NAP)","Liguria":"Genoa (GOA) or Nice (NCE)","Le Marche":"Ancona (AOI)","Provence":"Marseille (MRS), or Avignon by TGV"
+};
+const SETTING_LABEL = {hills:"Countryside",coast:"By the sea",mountain:"Mountains",city:"In town",lake:"On a lake"};
+const USE_LABEL = {wedding:"Weddings",retreat:"Retreats",corporate:"Off-sites",photoshoot:"Photoshoots"};
+const FLAG_LABEL = {pool:"Pool",chef:"Chef on request",dogs:"Dogs welcome",new:"New"};
+const FAQ = [
+ ["Booking",[["How do I book a villa?","Send a request from the villa's page with your dates and group size. We check the calendar with the owner and reply by email with a confirmed price, normally within 48 hours."],
+   ["Is it cheaper to book directly with the owner?","No. The price here is the owner's own rate and we add no booking fee. Each listing states what is included and which extra costs apply."],
+   ["Can you help me choose?","Yes. Tell us your dates, group and the kind of place you have in mind and we will send a shortlist."]]],
+ ["Payment and cancellation",[["When do I pay?","A 30% deposit confirms the booking and is due within two working days. The balance and the refundable security deposit are due 60 days before arrival. Bookings made inside 60 days are paid in full."],
+   ["What if I cancel?","More than 60 days before arrival, half of what you have paid is refunded. Inside 60 days there is no refund, so we recommend cancellation insurance. A few houses have their own terms, shown on their page."],
+   ["How can I pay?","By bank transfer or the payment link we send with your confirmation. You receive a receipt as soon as payment arrives."]]],
+ ["During your stay",[["What are the check-in and check-out times?","They vary by house and are listed under Prices and policies on each page. Most are check-in from 16:00 and check-out by 10:00."],
+   ["Can I bring my dog?","Some houses welcome dogs; use the Dogs welcome filter. A cleaning supplement may apply."],
+   ["Can you arrange a cot or extra bed?","Usually, sometimes for a small fee. Add it to the remarks on your request."]]],
+ ["Events and shoots",[["Do you have wedding venues?","Yes, see Venues. Each lists its capacity and the kinds of event it suits."],
+   ["Can we photograph in a villa?","Often, by arrangement with the owner. Tell us the house, dates and crew size."]]]
+];
+/* ---------- generated plates: landscape views, house fronts, pools ---------- */
+const PAL = {
+ hills:{sky:["#F7E6C6","#F0BC8E"],sun:"#FFF4DA",land:["#C3BE86","#9AA35D","#667A3D","#40532C"]},
+ coast:{sky:["#CDE4F1","#F6DCBC"],sun:"#FFF7E2",water:["#3B7DB4","#1E4F88"],far:"#9DB3C4",land:["#C8B27C","#8E8D4C","#4E5D30"]},
+ lake:{sky:["#D6E5EE","#F2DFC8"],sun:"#FFF6E0",water:["#6A9BBA","#3F6F95"],far:"#7F9A94",land:["#93A77A","#607B55","#3D563E"]},
+ mountain:{sky:["#DDE9F5","#F4D9C5"],sun:"#FFF6E4",peaks:["#C2CBDA","#93A0B8"],land:["#5F7468","#34493B"]},
+ city:{sky:["#F5DDBB","#EAAE8C"],sun:"#FFF1D2",walls:["#EBCFA4","#DDAA80","#CF8E6A","#C17A5C","#E3BE8C"],land:["#8C6F5A"]}
+};
+// time of day: morning, noon, golden hour, dusk
+const TOD=[{},{sky:["#BCDCF3","#E9F1EE"]},{sky:["#F7CF96","#F0A070"],wash:[[255,140,60],.13]},{sky:["#232C5A","#C4787A"],wash:[[26,30,84],.5],night:1}];
+const TODSEQ=[0,2,0,1,0,3,2,1];
+function rng(seed){let s=(seed*48271+11)%2147483647;if(s<=0)s+=2147483646;return()=>(s=s*16807%2147483647)/2147483647;}
+function mix(hex,rgb,a){const n=parseInt(hex.slice(1),16),c=[n>>16,(n>>8)&255,n&255].map((v,i)=>Math.round(v+(rgb[i]-v)*a));return "rgb("+c.join(",")+")";}
+function ridge(r,base,amp,W){const a=r()*6,b=r()*6,f1=(1+r()*1.5)*6.283/W,f2=(2.5+r()*3)*6.283/W;return t=>base-amp*(.6*Math.sin(t*f1+a)+.4*Math.sin(t*f2+b));}
+function jag(r,base,amp,W){const p=[];for(let t=-60;t<=W+140;t+=46+r()*74)p.push([t,base-amp*(.2+r()*.8)]);
+ return t=>{for(let i=1;i<p.length;i++)if(t<=p[i][0]){const a=p[i-1],b=p[i];return a[1]+(b[1]-a[1])*(t-a[0])/(b[0]-a[0]);}return base;};}
+function under(x,f,W,H,col){x.fillStyle=col;x.beginPath();x.moveTo(0,H);for(let t=0;t<=W;t+=6)x.lineTo(t,f(t));x.lineTo(W,f(W));x.lineTo(W,H);x.closePath();x.fill();}
+function rows(x,f,W,u,n,gap){x.strokeStyle="rgba(20,30,20,.13)";x.lineWidth=1.2*u;for(let k=1;k<=n;k++){x.beginPath();for(let t=0;t<=W;t+=10)x[t?"lineTo":"moveTo"](t,f(t)+k*gap*u+Math.sin(t*.01+k)*2*u);x.stroke();}}
+function blob(x,cx,cy,rx,ry){x.moveTo(cx+rx,cy);x.ellipse(cx,cy,rx,ry,0,0,6.2832);}
+function cloud(x,cx,cy,s,col){x.fillStyle=col;x.beginPath();blob(x,cx,cy,s,s*.3);blob(x,cx-s*.45,cy+s*.07,s*.55,s*.22);blob(x,cx+s*.5,cy+s*.09,s*.6,s*.2);blob(x,cx+s*.1,cy-s*.2,s*.45,s*.25);x.fill();}
+function cypress(x,cx,by,h,col){x.fillStyle=col;x.beginPath();x.ellipse(cx,by-h/2,h*.11,h/2,0,0,7);x.fill();}
+function pine(x,cx,by,h,col){x.fillStyle=col;x.beginPath();x.moveTo(cx,by-h);x.lineTo(cx+h*.26,by);x.lineTo(cx-h*.26,by);x.closePath();x.fill();}
+function upine(x,cx,by,h,col){x.strokeStyle=col;x.lineWidth=h*.05;x.beginPath();x.moveTo(cx,by);x.lineTo(cx+h*.04,by-h*.72);x.stroke();x.fillStyle=col;x.beginPath();x.ellipse(cx+h*.04,by-h*.8,h*.36,h*.15,0,0,7);x.fill();}
+function boat(x,cx,cy,s,C){x.fillStyle=C("#FFFFFF");x.beginPath();x.moveTo(cx,cy-s*2.4);x.lineTo(cx+s*1.2,cy-s*.3);x.lineTo(cx,cy-s*.3);x.fill();x.beginPath();x.moveTo(cx-s*.15,cy-s*1.9);x.lineTo(cx-s*.15,cy-s*.3);x.lineTo(cx-s*.95,cy-s*.3);x.fill();x.fillStyle=C("#2A3550");x.fillRect(cx-s*1.2,cy-s*.25,s*2.6,s*.4);}
+function house(x,cx,by,s,r,C,lit,pool){
+ const w=s*(1.5+r()*.9),h=s*(.8+r()*.3),win=lit?"#FFD77A":C("#3B3A4A");
+ if(pool){const px=cx-w/2-s*2.9,py=by+s*.3;x.fillStyle=C("#F1E6CC");x.fillRect(px-s*.08,py-s*.06,s*1.76,s*.42);x.fillStyle=C("#58C3CC");x.fillRect(px,py,s*1.6,s*.3);}
+ x.fillStyle=C("#F3E4C6");x.fillRect(cx-w/2,by-h,w,h);
+ x.fillStyle=C("#B9603E");x.beginPath();x.moveTo(cx-w/2-s*.1,by-h);x.lineTo(cx-w*.28,by-h-s*.42);x.lineTo(cx+w*.28,by-h-s*.42);x.lineTo(cx+w/2+s*.1,by-h);x.closePath();x.fill();
+ x.fillStyle=win;const n=2+Math.floor(r()*3);for(let i=0;i<n;i++)x.fillRect(cx-w/2+w*(i+.6)/(n+.2)-s*.07,by-h*.72,s*.14,s*.22);
+ x.fillStyle=C("#3B3A4A");x.fillRect(cx-s*.09,by-s*.34,s*.18,s*.34);
+ if(r()>.45){const tw=s*.5;x.fillStyle=C("#EAD6B2");x.fillRect(cx+w/2,by-h*1.5,tw,h*1.5);x.fillStyle=C("#B9603E");x.fillRect(cx+w/2-s*.05,by-h*1.5-s*.1,tw+s*.1,s*.1);x.fillStyle=win;x.fillRect(cx+w/2+tw/2-s*.06,by-h*1.25,s*.12,s*.2);}
+}
+/* o: {sky,mid,front} target contexts for layering, tod, sunX, houseX, hz, scale, pool, noClouds, noGlints, noBoat */
+function scene(c,seed,setting,variant,o){
+ o=o||{};const W=c.width,H=c.height,u=H/480,k=o.scale||1,r=rng(seed*13+(variant||0)*977+5),P=PAL[setting]||PAL.hills;
+ const x0=c.getContext("2d"),S=o.sky||x0,M=o.mid||x0,Fx=o.front||x0;
+ const T=TOD[o.tod!=null?o.tod:TODSEQ[(seed+(variant||0)*3)%TODSEQ.length]],C=h=>T.wash?mix(h,T.wash[0],T.wash[1]):h;
+ const sky=T.sky||P.sky;let g=S.createLinearGradient(0,0,0,H*.75);g.addColorStop(0,sky[0]);g.addColorStop(1,sky[1]);S.fillStyle=g;S.fillRect(0,0,W,H);
+ if(T.night){S.fillStyle="rgba(255,255,255,.8)";for(let i=0;i<70;i++){const z=(.7+r()*1.3)*u;S.fillRect(r()*W,r()*H*.45,z,z);}}
+ const sx=W*(o.sunX!=null?o.sunX:.18+r()*.64),sy=H*(.13+r()*.15),sr=H*.055;
+ g=S.createRadialGradient(sx,sy,sr*.6,sx,sy,sr*4.5);g.addColorStop(0,T.night?"rgba(255,244,214,.3)":"rgba(255,246,220,.75)");g.addColorStop(1,"rgba(255,246,220,0)");S.fillStyle=g;S.fillRect(0,0,W,H);
+ S.fillStyle=T.night?"#F4ECD6":P.sun;S.beginPath();S.arc(sx,sy,sr,0,7);S.fill();
+ for(let i=0,nc=2+Math.floor(r()*3);i<nc;i++){const a=[r(),r(),r()];if(!o.noClouds)cloud(S,a[0]*W,H*(.08+a[1]*.26),(38+a[2]*46)*u,T.night?"rgba(255,220,220,.26)":"rgba(255,255,255,.72)");}
+ const hz=H*(o.hz||(.5+r()*.07));
+ if(setting==="city"){
+  under(Fx,ridge(r,hz+10*u,22*u,W),W,H,C("#D9B9A0"));
+  for(let row=0;row<2;row++){let t=-20*u;const base=H*(.84+row*.1);
+   while(t<W){const bw=(54+r()*74)*u,bh=(150-row*26+r()*120)*u,col=P.walls[Math.floor(r()*P.walls.length)];
+    Fx.fillStyle=C(col);Fx.fillRect(t,base-bh,bw,bh+H);Fx.fillStyle=C("#A9573A");Fx.fillRect(t-3*u,base-bh-7*u,bw+6*u,8*u);
+    const cols=Math.max(2,Math.floor(bw/(24*u)));for(let yy=base-bh+20*u;yy<base-20*u;yy+=34*u)for(let q=0;q<cols;q++){Fx.fillStyle=T.night&&r()>.45?"#FFD77A":C("#4A3F4E");Fx.fillRect(t+bw*(q+.5)/cols-5*u,yy,10*u,17*u);}
+    if(row===0&&r()>.8){Fx.fillStyle=C("#EAD6B2");Fx.fillRect(t+bw*.3,base-bh-90*u,bw*.3,90*u);Fx.fillStyle=C("#A9573A");Fx.beginPath();Fx.moveTo(t+bw*.26,base-bh-90*u);Fx.lineTo(t+bw*.45,base-bh-128*u);Fx.lineTo(t+bw*.64,base-bh-90*u);Fx.fill();}
+    t+=bw+2*u;}}
+  Fx.fillStyle=C(P.land[0]);Fx.fillRect(0,H*.95,W,H*.05);return {hz:hz,start:H};
+ }
+ if(P.peaks){under(M,jag(r,hz+20*u,190*u,W),W,H,C(P.peaks[0]));under(M,jag(r,hz+50*u,130*u,W),W,H,C(P.peaks[1]));}
+ let start=P.peaks?hz+70*u:hz,step=H*.115;
+ if(P.water){
+  under(M,ridge(r,hz,26*u,W),W,H,C(P.far));
+  g=M.createLinearGradient(0,hz,0,H);g.addColorStop(0,C(P.water[0]));g.addColorStop(1,C(P.water[1]));M.fillStyle=g;M.fillRect(0,hz+4*u,W,H);
+  start=hz+(H-hz)*.5;step=(H-start)/3.1;
+  M.fillStyle="rgba(255,255,255,.35)";for(let i=0;i<16;i++){const a=[r(),r(),r()];if(!o.noGlints)M.fillRect(a[0]*W,hz+10*u+a[1]*(start-hz-14*u),(18+a[2]*46)*u,1.6*u);}
+  const bx=r()*W;if(!o.noBoat&&bx>W*.12)boat(M,bx,hz+(start-hz)*.3,9*u,C);
+ }
+ const L=P.land,seatIx=Math.min(L.length-1,P.water?0:(P.peaks?0:2)),tc=C("#2C3F2A"),pc=C("#263B30");let seat=null;
+ L.forEach((col,i)=>{const f=ridge(r,start+i*step,(P.water?16:24)*u,W);under(Fx,f,W,H,C(col));
+  if(!P.peaks)rows(Fx,f,W,u,P.water?2:4,13);
+  if(i===seatIx)seat=f;
+  if(i>0&&!P.peaks&&r()>.35){const n=3+Math.floor(r()*6),t0=r()*W*.8;for(let q=0;q<n;q++){const tx=t0+q*15*u*k,hh=(34+r()*20)*u*k;(P.water&&q%3===2?upine:cypress)(Fx,tx,f(tx)+3*u,hh,tc);}}
+  if(P.peaks)for(let q=0;q<26;q++){const tx=r()*W;pine(Fx,tx,f(tx)+5*u,(26+r()*26)*u,pc);}
+ });
+ if(seat){const cx=W*(o.houseX!=null?o.houseX:.24+r()*.52),by=seat(cx)+5*u,s=(34+r()*14)*u*k;
+  if(P.peaks){pine(Fx,cx-s*1.9,by+2*u,s*1.5,pc);pine(Fx,cx+s*2,by+2*u,s*1.2,pc);}else{cypress(Fx,cx-s*1.75,by+2*u,s*1.9,tc);cypress(Fx,cx-s*2.2,by+2*u,s*1.5,tc);cypress(Fx,cx+s*2,by+2*u,s*1.7,tc);}
+  house(Fx,cx,by,s,r,C,T.night,o.pool);}
+ return {hz:hz,start:start};
+}
+/* a house front: plaster wall, shuttered windows, flower boxes, a lemon tree in a pot */
+function facade(c,seed){
+ const W=c.width,H=c.height,x=c.getContext("2d"),r=rng(seed*31+7),u=Math.min(W,H)/480;
+ const wall=["#EBCFA4","#E8B98E","#F1DDB8","#E3A988","#EFD3BE"][Math.floor(r()*5)],sh=["#3F6B57","#2F5D7C","#7A4A3A","#5A6A3A"][Math.floor(r()*4)];
+ x.fillStyle=wall;x.fillRect(0,0,W,H);
+ for(let i=0;i<46;i++){x.fillStyle=i%2?"rgba(255,255,255,.07)":"rgba(90,50,20,.05)";x.beginPath();x.ellipse(r()*W,r()*H,(30+r()*90)*u,(14+r()*40)*u,r()*3,0,7);x.fill();}
+ const gy=H*.88;x.fillStyle="#CDBB9C";x.fillRect(0,gy,W,H-gy);x.fillStyle="rgba(0,0,0,.1)";x.fillRect(0,gy,W,5*u);
+ const ww=W*.2,wh=H*.36,wy=H*.18;
+ [.28,.72].forEach((p,ix)=>{const cx=W*p;
+  x.fillStyle="#EEE6D4";x.fillRect(cx-ww/2-8*u,wy-8*u,ww+16*u,wh+16*u);
+  x.fillStyle="#2E3A4E";x.fillRect(cx-ww/2,wy,ww,wh);
+  x.fillStyle="rgba(255,255,255,.14)";x.beginPath();x.moveTo(cx-ww/2,wy);x.lineTo(cx,wy);x.lineTo(cx-ww/2,wy+wh*.6);x.fill();
+  x.fillStyle="#EEE6D4";x.fillRect(cx-2*u,wy,4*u,wh);x.fillRect(cx-ww/2,wy+wh*.45,ww,4*u);
+  [-1,1].forEach(d=>{const sx=d<0?cx-ww/2-8*u-ww*.5:cx+ww/2+8*u;x.fillStyle=sh;x.fillRect(sx,wy-4*u,ww*.5,wh+8*u);x.fillStyle="rgba(0,0,0,.18)";for(let yy=wy+6*u;yy<wy+wh;yy+=11*u)x.fillRect(sx+5*u,yy,ww*.5-10*u,3*u);});
+  x.fillStyle="#A9573A";x.fillRect(cx-ww/2-10*u,wy+wh+8*u,ww+20*u,16*u);
+  for(let i=0;i<24;i++){x.fillStyle=i%3?"#3E6B3A":["#D8475A","#F2A0B2","#F5D04A"][ix+(i%2)];x.beginPath();x.arc(cx-ww/2+r()*ww,wy+wh+8*u-r()*14*u,(5+r()*5)*u,0,7);x.fill();}
+ });
+ [[.5,1.25,1],[.1,.7,0],[.92,.8,0]].forEach(([p,z,lemon])=>{const cx=W*p,pw=34*u*z,ph=40*u*z;
+  x.fillStyle="#B9603E";x.beginPath();x.moveTo(cx-pw*.5,gy-ph);x.lineTo(cx+pw*.5,gy-ph);x.lineTo(cx+pw*.36,gy+4*u);x.lineTo(cx-pw*.36,gy+4*u);x.fill();
+  x.fillStyle="#6B4A33";x.fillRect(cx-2*u*z,gy-ph-44*u*z,4*u*z,46*u*z);
+  for(let i=0;i<26;i++){x.fillStyle=i%2?"#3E6B3A":"#2F5632";x.beginPath();x.arc(cx+(r()-.5)*74*u*z,gy-ph-58*u*z-r()*52*u*z,(12+r()*10)*u*z,0,7);x.fill();}
+  if(lemon)for(let i=0;i<9;i++){x.fillStyle="#F5D04A";x.beginPath();x.ellipse(cx+(r()-.5)*66*u*z,gy-ph-56*u*z-r()*50*u*z,5*u*z,6.5*u*z,.4,0,7);x.fill();}
+ });
+ x.fillStyle="#A9573A";x.fillRect(0,0,W,20*u);x.fillStyle="rgba(0,0,0,.13)";x.fillRect(0,20*u,W,13*u);
+}
+/* a pool terrace seen from above */
+function poolPlate(c,seed){
+ const W=c.width,H=c.height,x=c.getContext("2d"),r=rng(seed*17+3),u=Math.min(W,H)/480;
+ x.fillStyle="#8FA35A";x.fillRect(0,0,W,H);
+ for(let i=0;i<34;i++){x.fillStyle=i%2?"rgba(255,255,220,.07)":"rgba(30,60,20,.08)";x.beginPath();x.ellipse(r()*W,r()*H,(30+r()*80)*u,(16+r()*40)*u,r()*3,0,7);x.fill();}
+ const tx=W*.08,ty=H*.14,tw=W*.84,th=H*.7;x.fillStyle="#E9DCC0";x.fillRect(tx,ty,tw,th);
+ x.strokeStyle="rgba(120,90,50,.15)";x.lineWidth=u;x.beginPath();for(let a=tx+44*u;a<tx+tw;a+=44*u){x.moveTo(a,ty);x.lineTo(a,ty+th);}for(let b=ty+44*u;b<ty+th;b+=44*u){x.moveTo(tx,b);x.lineTo(tx+tw,b);}x.stroke();
+ const px=W*.16,py=H*.26,pw=W*.46,ph=H*.46;x.fillStyle="#FBF4E2";x.fillRect(px-10*u,py-10*u,pw+20*u,ph+20*u);
+ const g=x.createLinearGradient(px,py,px+pw,py+ph);g.addColorStop(0,"#63C8CF");g.addColorStop(1,"#2E93B4");x.fillStyle=g;x.fillRect(px,py,pw,ph);
+ x.strokeStyle="rgba(255,255,255,.42)";x.lineWidth=1.8*u;for(let i=0;i<18;i++){x.beginPath();x.arc(px+pw*(.08+r()*.84),py+ph*(.06+r()*.86),(9+r()*16)*u,.3,1.5);x.stroke();}
+ x.fillStyle="rgba(255,255,255,.3)";for(let i=0;i<3;i++)x.fillRect(px+pw-(i+1)*16*u,py+ph-56*u,14*u,56*u);
+ const lx=px+pw+40*u,lw=Math.min(W*.2,tx+tw-lx-16*u),lh=ph/3-20*u,cols=["#E9C82C","#D9644A","#2F5D7C"];
+ for(let i=0;i<3;i++){const ly=py+i*(ph/3)+10*u;x.fillStyle="rgba(0,0,0,.12)";x.fillRect(lx+5*u,ly+6*u,lw,lh);x.fillStyle="#FFFDF6";x.fillRect(lx,ly,lw,lh);x.fillStyle=cols[i];x.fillRect(lx+lw*.38,ly,lw*.34,lh);x.fillStyle="#E7DFCC";x.fillRect(lx+lw*.06,ly+lh*.18,lw*.2,lh*.64);}
+ [[px+pw*.3,py-46*u,cols[1]],[lx+lw*.5,py+ph+34*u,cols[0]]].forEach(([cx,cy,col])=>{const R=40*u;x.fillStyle="rgba(0,0,0,.13)";x.beginPath();x.arc(cx+8*u,cy+9*u,R,0,7);x.fill();
+  for(let i=0;i<8;i++){x.fillStyle=i%2?"#FFFDF6":col;x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,R,i*.7854,(i+1)*.7854);x.fill();}x.fillStyle="#6B4A33";x.beginPath();x.arc(cx,cy,3*u,0,7);x.fill();});
+ [[.04,.93],[.95,.07],[.93,.95],[.03,.08]].forEach(([p,q])=>{for(let i=0;i<16;i++){x.fillStyle=i%2?"#3E6B3A":"#2F5632";x.beginPath();x.arc(W*p+(r()-.5)*90*u,H*q+(r()-.5)*90*u,(18+r()*18)*u,0,7);x.fill();}});
+}
+/* ---------- helpers ---------- */
+const $=(s,el)=>(el||document).querySelector(s);
+const pad=n=>String(n).padStart(3,"0");
+const num=n=>"N° "+pad(n);
+const eur=v=>"€"+Math.round(v).toLocaleString("en-GB");
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const SEED={villa:0,stay:100,venue:200};
+const slug=o=>o.kind+"-"+pad(o.n);
+const hasPool=o=>!!(o.flags&&o.flags.includes("pool"));
+// v: 0 landscape view, 1 house front, 2 pool (or the view at dusk), 3+ other views
+const plate=(o,v,w,h,x)=>{v=v||0;x=x||{};
+ const kind=x.kind||(v===1&&o.kind!=="venue"?"facade":v===2&&hasPool(o)?"pool":"view"),tod=x.tod!=null?x.tod:(v===2&&kind==="view"?3:"");
+ const what=kind==="facade"?"house front":kind==="pool"?"pool terrace":SETTING_LABEL[o.setting].toLowerCase()+" view";
+ return `<canvas width="${w||600}" height="${h||750}" data-seed="${SEED[o.kind]+o.n}" data-setting="${o.setting}" data-v="${v}" data-kind="${kind}"${tod!==""?` data-tod="${tod}"`:""}${hasPool(o)?' data-pool="1"':""} role="img" aria-label="Illustration, ${esc(what)}: ${esc(o.name)}"></canvas>`;};
+const countBy=(list,key)=>{const m={};list.forEach(o=>m[o[key]]=(m[o[key]]||0)+1);return Object.entries(m).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));};
+const opts=(vals,sel)=>vals.map(v=>{const[val,label]=Array.isArray(v)?v:[v,v];return `<option value="${esc(val)}"${String(val)===String(sel)?" selected":""}>${esc(label)}</option>`;}).join("");
+const store={get(k,d){try{const v=localStorage.getItem("olv_"+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem("olv_"+k,JSON.stringify(v));}catch(e){}}};
+const calm=()=>matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+function paint(){
+ document.querySelectorAll("canvas[data-seed]:not([data-done])").forEach(c=>{const d=c.dataset;try{
+  if(d.kind==="facade")facade(c,+d.seed);else if(d.kind==="pool")poolPlate(c,+d.seed);
+  else scene(c,+d.seed,d.setting,+d.v||0,{tod:d.tod!==undefined?+d.tod:undefined,pool:d.pool==="1"});
+ }catch(e){}d.done="1";});
+ reveal();
+}
+/* things settle into place as they scroll into view; they are fully visible before that */
+let IO=null;
+function reveal(){
+ if(!("IntersectionObserver" in window)||calm())return;
+ IO=IO||new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");IO.unobserve(e.target);}}),{threshold:.12});
+ document.querySelectorAll(".card,.way,.tile,.steps li,.rowlink,.sec-head,.say,.person,.band .plate").forEach(el=>{if(!el.dataset.rv){el.dataset.rv="1";IO.observe(el);}});
+}
+
+/* ---------- animated hero: drifting clouds, a passing boat, light on the water, birds ---------- */
+let heroKick=null;
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&heroKick)heroKick();});
+function heroStart(cv){
+ const still=calm(),R=rng(77),cl=Array.from({length:6},()=>[R(),R(),R(),R()]),gl=Array.from({length:30},()=>[R(),R(),R()]);
+ let L=null,raf=0,vis=true;const t0=performance.now();
+ const build=()=>{const d=Math.min(window.devicePixelRatio||1,2),W=Math.round(cv.clientWidth*d),H=Math.round(cv.clientHeight*d);if(!W||!H)return;
+  if(L&&L.W===W&&L.H===H)return;cv.width=W;cv.height=H;
+  const mk=()=>{const k=document.createElement("canvas");k.width=W;k.height=H;return k;},s=mk(),m=mk(),f=mk(),tall=W/H<1.15;
+  const meta=scene(s,14,"coast",0,{sky:s.getContext("2d"),mid:m.getContext("2d"),front:f.getContext("2d"),tod:0,sunX:tall?.8:.84,houseX:tall?.62:.74,hz:.7,scale:tall?1.15:1.5,noClouds:1,noGlints:1,noBoat:1,pool:1});
+  L={s,m,f,W,H,hz:meta.hz,start:meta.start};};
+ const frame=now=>{raf=0;if(!cv.isConnected){if(heroKick===kick)heroKick=null;return;}
+  if(L){const x=cv.getContext("2d"),W=L.W,H=L.H,hz=L.hz,start=L.start,u=H/480,t=(now-t0)/1000;
+   x.drawImage(L.s,0,0);
+   cl.forEach(c=>{const span=W+520*u,cx=((c[0]*span+t*(5+c[3]*9)*u)%span)-260*u;cloud(x,cx,H*(.06+c[1]*.4),(46+c[2]*60)*u,"rgba(255,255,255,.7)");});
+   x.drawImage(L.m,0,0);
+   gl.forEach((g,i)=>{x.fillStyle="rgba(255,255,255,"+(.12+.4*(.5+.5*Math.sin(t*1.4+i*2.3))).toFixed(3)+")";x.fillRect(g[0]*W,hz+8*u+g[1]*(start-hz-12*u),(16+g[2]*50)*u,1.6*u);});
+   const bs=W+120*u;boat(x,((W*.2+t*7*u)%bs)-60*u,hz+(start-hz)*.32+Math.sin(t*1.1)*1.2*u,10*u,h=>h);
+   x.drawImage(L.f,0,0);
+   x.strokeStyle="rgba(20,35,59,.7)";x.lineWidth=1.6*u;x.lineCap="round";
+   for(let i=0;i<4;i++){const sp=W+240*u,bx=((W*.55+t*(20+i*4)*u+i*70*u)%sp)-120*u,by=H*(.5+i*.035)+Math.sin(t*.8+i)*7*u,fl=Math.sin(t*8+i*1.7)*4*u,s=7*u;
+    x.beginPath();x.moveTo(bx-s,by-fl);x.quadraticCurveTo(bx-s*.4,by-s*.5-fl*.3,bx,by);x.quadraticCurveTo(bx+s*.4,by-s*.5-fl*.3,bx+s,by-fl);x.stroke();}
+  }
+  if(!still&&vis&&!document.hidden)raf=requestAnimationFrame(frame);};
+ const kick=()=>{if(!raf)raf=requestAnimationFrame(frame);};
+ heroKick=kick;build();frame(t0);
+ if("ResizeObserver" in window)new ResizeObserver(()=>{build();kick();}).observe(cv);
+ if("IntersectionObserver" in window)new IntersectionObserver(e=>{vis=e[0].isIntersecting;if(vis)kick();}).observe(cv);
+}
+
+/* ---------- catalogue cards ---------- */
+function villaCard(v){return `<a class="card" href="#${slug(v)}">
+ <div class="shot">${plate(v)}${v.flags.includes("new")?'<span class="tag">New</span>':""}</div>
+ <div class="meta mono"><span>${num(v.n)}</span><span>${esc(v.region)}</span></div>
+ <h3>${esc(v.name)}</h3>
+ <div class="facts">${v.guests} guests · ${v.beds} bedrooms · ${v.baths} baths</div>
+ <div class="price">from <b>${eur(v.price)}</b> a week</div></a>`;}
+function stayCard(s){return `<a class="card" href="#${slug(s)}">
+ <div class="shot">${plate(s,s.setting==="city"?0:(s.n%3===0?1:0))}</div>
+ <div class="meta mono"><span>${num(s.n)}</span><span>${esc(s.region)}</span></div>
+ <h3>${esc(s.name)}</h3>
+ <div class="facts">${esc(s.type)} · ${s.rooms} ${s.rooms===1?"room":"rooms"}</div>
+ <div class="price">from <b>${eur(s.price)}</b> a night</div></a>`;}
+function venueCard(v){return `<a class="card" href="#${slug(v)}">
+ <div class="shot">${plate(v,0,600,750,{tod:v.n%2?3:2})}</div>
+ <div class="meta mono"><span>${num(v.n)}</span><span>${esc(v.region)}</span></div>
+ <h3>${esc(v.name)}</h3>
+ <div class="facts">Up to ${v.cap} guests</div>
+ <div class="price">${v.uses.map(u=>USE_LABEL[u]).join(" · ")}</div></a>`;}
+/* ---------- home ---------- */
+function vHome(){
+ const feat=[5,12,9,16,2,8,19,21].map(n=>VILLAS.find(v=>v.n===n));
+ const way=(canvas,title,text,href,cta)=>`<div class="way"><a class="plate" href="${href}">${canvas}</a><h3>${title}</h3><p>${text}</p><div><a class="btn ghost small" href="${href}">${cta}</a></div></div>`;
+ const tile=([r,c],i)=>`<a class="tile" href="#villas" data-region="${esc(r)}">${plate(VILLAS.find(v=>v.region===r),5,480,640,{kind:"view",tod:[0,2,1,0,3,2][i%6]})}<span class="cap"><b>${esc(r)}</b><i>${c} ${c===1?"villa":"villas"}</i></span></a>`;
+ return {html:`
+ <section class="hero2">
+  <canvas id="heroCv" role="img" aria-label="Animated illustration: a house with a pool above the sea, clouds drifting and a sailing boat passing"></canvas>
+  <div class="wrap hero2-in">
+   <span class="eyebrow">${VILLAS.length} villas · ${STAYS.length} small stays · ${VENUES.length} venues</span>
+   <h1>Slow weeks in <em>remarkable</em> Italian houses</h1>
+   <p class="lead">A small catalogue, every entry visited in person. You pay the owner's own rate and no booking fee.</p>
+  </div>
+ </section>
+ <div class="wrap">
+  <form class="search dock" id="homeSearch">
+   <label class="field"><span>Region</span><select id="hsRegion">${opts([["","Anywhere"],...REGIONS.map(r=>r[0])],F.region)}</select></label>
+   <label class="field"><span>Guests</span><select id="hsGuests">${opts(GUEST_OPTS,F.guests)}</select></label>
+   <label class="field"><span>Arriving</span><input type="date" id="hsArrive" value="${esc(F.arrive)}"></label>
+   <button class="btn" type="submit">Show villas</button>
+  </form>
+ </div>
+ <section class="sec"><div class="wrap">
+  <div class="sec-head"><div><span class="eyebrow">From the catalogue</span><h2>Eight houses to start with</h2></div><a class="btn ghost" href="#villas">All ${VILLAS.length} villas</a></div>
+  <div class="cards">${feat.map(villaCard).join("")}</div>
+ </div></section>
+ <section class="sec"><div class="wrap">
+  <div class="sec-head"><div><span class="eyebrow">Index</span><h2>Browse by region</h2></div>
+   <div class="chips"><button type="button" class="chip" id="stripPrev" aria-label="Earlier regions">←</button><button type="button" class="chip" id="stripNext" aria-label="More regions">→</button></div></div>
+  <div class="strip" id="strip" tabindex="0" aria-label="Regions">${REGIONS.map(tile).join("")}</div>
+ </div></section>
+ <section class="sec"><div class="wrap split say">
+  <div class="stack"><span class="eyebrow">How we choose</span><h2>We sleep in every house before it gets a number.</h2>
+   <p class="lead">That is the whole selection method. Most of the places we visit are never added.</p><div><a class="btn ghost" href="#about">About the catalogue</a></div></div>
+  <a class="plate" href="#about">${plate(VILLAS[0],1,800,640)}</a>
+ </div></section>
+ <section class="sec"><div class="wrap">
+  <div class="sec-head"><div><span class="eyebrow">Three collections</span><h2>Pick the kind of stay</h2></div></div>
+  <div class="cols3">
+   ${way(plate(VILLAS[6],4,600,750,{tod:2}),"Villas, by the week","Whole houses for four to twenty people. Booked through us, Saturday to Saturday in summer.","#villas","See villas")}
+   ${way(plate(STAYS[4],1,600,750,{kind:"facade"}),"Small stays, by the night","Guesthouses, B&amp;Bs and small hotels for two. You book directly with the owner.","#stays","See small stays")}
+   ${way(plate(VENUES[2],0,600,750,{tod:3}),"Venues, for the occasion","Places for weddings, retreats, off-sites and photoshoots, from 50 to 400 guests.","#venues","See venues")}
+  </div>
+ </div></section>
+ <section class="sec"><div class="wrap">
+  <div class="sec-head"><div><span class="eyebrow">Booking a villa</span><h2>From request to arrival</h2></div><a class="btn ghost" href="#help">Read the FAQ</a></div>
+  <ol class="steps">
+   <li><b>Send a request</b>Choose dates and group size on the villa's page. Nothing is charged.</li>
+   <li><b>We confirm with the owner</b>You get the exact price by email, normally within 48 hours.</li>
+   <li><b>Pay the 30% deposit</b>Due within two working days. That secures the house.</li>
+   <li><b>Settle 60 days before</b>The balance and the refundable security deposit, then you travel.</li>
+  </ol>
+ </div></section>
+ <section class="sec"><div class="wrap">
+  <div class="sec-head"><div><span class="eyebrow">Journal</span><h2>Reading for the journey</h2></div><a class="btn ghost" href="#journal">All articles</a></div>
+  <div class="rows">${ARTICLES.slice(0,3).map(articleRow).join("")}</div>
+ </div></section>
+ ${memberBand()}
+ <section class="sec"><div class="wrap split">
+  <div class="stack"><span class="eyebrow">As seen in</span><div class="press"><span>Press title one</span><span>Press title two</span><span>Press title three</span></div><p class="muted">Placeholder names. Replace with the publications that have covered you.</p></div>
+  <form class="form" id="newsForm"><span class="eyebrow">Letters from Italy</span><h3>One email a month, written from the road</h3>
+   <div class="two"><label class="field"><span>Email</span><input type="email" id="newsEmail" required placeholder="you@example.com"></label><div class="field"><span>&nbsp;</span><button class="btn" type="submit">Subscribe</button></div></div>
+   <div id="newsMsg" hidden class="note ok"></div></form>
+ </div></section>`,
+ mount(el){
+  heroStart($("#heroCv",el));
+  $("#homeSearch",el).addEventListener("submit",e=>{e.preventDefault();F.region=$("#hsRegion").value;F.guests=+$("#hsGuests").value;F.arrive=$("#hsArrive").value;saveF();go("villas");});
+  el.querySelectorAll("[data-region]").forEach(a=>a.addEventListener("click",()=>{Object.assign(F,{region:a.dataset.region,guests:0,setting:"",flag:""});saveF();}));
+  const strip=$("#strip",el),move=d=>strip.scrollBy({left:d*strip.clientWidth*.8,behavior:calm()?"auto":"smooth"});
+  $("#stripPrev",el).addEventListener("click",()=>move(-1));$("#stripNext",el).addEventListener("click",()=>move(1));
+  demoForm("#newsForm","#newsMsg","You're on the list in this demo. No email was stored or sent.");
+ }};
+}
+function memberBand(){return `<section class="band"><div class="wrap">
+ <div class="stack"><span class="eyebrow">Membership · free for now</span><h2>The address book we share with members</h2>
+  <ul><li>Booking contacts for all ${STAYS.length} small stays</li><li>${GUIDES.length} regional guides with saved places</li><li>First notice of new villas</li></ul>
+  <div><a class="btn" href="#membership">Join free</a></div></div>
+ <a class="plate" href="#membership">${plate(VILLAS.find(v=>v.n===16),6,720,540,{kind:"view",tod:3})}</a>
+</div></section>`;}
+/* ---------- views: home and the three indexes ---------- */
+const F=Object.assign({region:"",guests:0,setting:"",flag:"",sort:"n",view:"grid",arrive:""},store.get("filters",{}));
+const saveF=()=>store.set("filters",F);
+const REGIONS=countBy(VILLAS,"region");
+const GUEST_OPTS=[[0,"Any group size"],[2,"2 or more"],[4,"4 or more"],[6,"6 or more"],[8,"8 or more"],[10,"10 or more"],[14,"14 or more"]];
+
+function articleRow(a){return `<a class="rowlink" href="#journal"><span class="eyebrow">${esc(a.cat)}</span><h3>${esc(a.title)}</h3><span class="mono muted">${a.mins} min read</span><p>${esc(a.blurb)}</p></a>`;}
+function demoForm(formSel,msgSel,text){const f=$(formSel);if(!f)return;f.addEventListener("submit",e=>{e.preventDefault();const m=$(msgSel);m.textContent=text;m.hidden=false;});}
+
+function vVillas(){
+ return {html:`<div class="wrap">
+  <header class="page-head"><span class="eyebrow">Collection one</span><h1>Villas</h1>
+   <p class="lead">Whole houses rented by the week. Prices are the owners' own rates, with no booking fee added.</p></header>
+  <div class="filters">
+   <label class="field"><span>Region</span><select id="fRegion">${opts([["","All regions"],...REGIONS.map(r=>[r[0],r[0]+" ("+r[1]+")"])],F.region)}</select></label>
+   <label class="field"><span>Guests</span><select id="fGuests">${opts(GUEST_OPTS,F.guests)}</select></label>
+   <label class="field"><span>Setting</span><select id="fSetting">${opts([["","Any setting"],...Object.entries(SETTING_LABEL)],F.setting)}</select></label>
+   <label class="field"><span>Sort by</span><select id="fSort">${opts([["n","Catalogue number"],["price","Price, low to high"],["priced","Price, high to low"],["guests","Largest first"]],F.sort)}</select></label>
+  </div>
+  <div class="chips" id="fFlags">${["pool","dogs","chef","new"].map(f=>`<button type="button" class="chip" data-flag="${f}" aria-pressed="${F.flag===f}">${FLAG_LABEL[f]}</button>`).join("")}</div>
+  <div class="resultbar" style="margin-top:18px"><span class="mono" id="vCount"></span>
+   <div class="chips"><button type="button" class="chip" data-view="grid">Plates</button><button type="button" class="chip" data-view="list">Index list</button><button type="button" class="chip" id="fClear">Clear filters</button></div></div>
+  <div id="vResults"></div><div style="height:72px"></div></div>`,
+ mount(el){
+  const draw=()=>{
+   let list=VILLAS.filter(v=>(!F.region||v.region===F.region)&&v.guests>=F.guests&&(!F.setting||v.setting===F.setting)&&(!F.flag||v.flags.includes(F.flag)));
+   const s={n:(a,b)=>a.n-b.n,price:(a,b)=>a.price-b.price,priced:(a,b)=>b.price-a.price,guests:(a,b)=>b.guests-a.guests}[F.sort]||((a,b)=>a.n-b.n);list.sort(s);
+   $("#vCount").textContent=list.length+(list.length===1?" villa":" villas")+" of "+VILLAS.length;
+   el.querySelectorAll("[data-view]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===F.view));
+   el.querySelectorAll("[data-flag]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.flag===F.flag));
+   const R=$("#vResults");
+   if(!list.length){R.innerHTML=`<div class="note">No villa matches all of these filters. Try a smaller group size or clear a filter.</div>`;}
+   else if(F.view==="list"){R.innerHTML=`<div class="scroll"><table><thead><tr><th>N°</th><th>House</th><th>Region</th><th>Setting</th><th class="num">Guests</th><th class="num">Bedrooms</th><th class="num">From / week</th></tr></thead><tbody>${list.map(v=>`<tr><td class="mono">${pad(v.n)}</td><td><a href="#${slug(v)}">${esc(v.name)}</a></td><td>${esc(v.region)}</td><td>${SETTING_LABEL[v.setting]}</td><td class="num">${v.guests}</td><td class="num">${v.beds}</td><td class="num">${eur(v.price)}</td></tr>`).join("")}</tbody></table></div>`;}
+   else R.innerHTML=`<div class="cards">${list.map(villaCard).join("")}</div>`;
+   saveF();paint();};
+  [["#fRegion","region"],["#fSetting","setting"],["#fSort","sort"]].forEach(([s,k])=>$(s).addEventListener("change",e=>{F[k]=e.target.value;draw();}));
+  $("#fGuests").addEventListener("change",e=>{F.guests=+e.target.value;draw();});
+  el.querySelectorAll("[data-flag]").forEach(b=>b.addEventListener("click",()=>{F.flag=F.flag===b.dataset.flag?"":b.dataset.flag;draw();}));
+  el.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{F.view=b.dataset.view;draw();}));
+  $("#fClear").addEventListener("click",()=>{Object.assign(F,{region:"",guests:0,setting:"",flag:"",sort:"n"});$("#fRegion").value="";$("#fGuests").value="0";$("#fSetting").value="";$("#fSort").value="n";draw();});
+  draw();
+ }};
+}
+
+function vStays(){
+ const regs=countBy(STAYS,"region"),types=[...new Set(STAYS.map(s=>s.type))];let reg="",type="";
+ return {html:`<div class="wrap">
+  <header class="page-head"><span class="eyebrow">Collection two</span><h1>Small stays</h1>
+   <p class="lead">Guesthouses, B&amp;Bs and small hotels we have slept in and would go back to. Each is run by its owner and booked directly with them.</p></header>
+  <div class="note" style="margin-bottom:24px">Booking contacts are shown to members. <a href="#membership">Membership is free.</a></div>
+  <div class="filters" style="grid-template-columns:repeat(2,minmax(0,1fr));max-width:560px">
+   <label class="field"><span>Region</span><select id="sRegion">${opts([["","All regions"],...regs.map(r=>[r[0],r[0]+" ("+r[1]+")"])],"")}</select></label>
+   <label class="field"><span>Type</span><select id="sType">${opts([["","Any type"],...types],"")}</select></label></div>
+  <div class="resultbar"><span class="mono" id="sCount"></span></div>
+  <div id="sResults"></div><div style="height:72px"></div></div>`,
+ mount(){const draw=()=>{const list=STAYS.filter(s=>(!reg||s.region===reg)&&(!type||s.type===type));$("#sCount").textContent=list.length+" of "+STAYS.length+" small stays";
+   $("#sResults").innerHTML=list.length?`<div class="cards">${list.map(stayCard).join("")}</div>`:`<div class="note">Nothing matches both filters yet.</div>`;paint();};
+  $("#sRegion").addEventListener("change",e=>{reg=e.target.value;draw();});$("#sType").addEventListener("change",e=>{type=e.target.value;draw();});draw();}};
+}
+
+function vVenues(){
+ let use="",cap=0;
+ return {html:`<div class="wrap">
+  <header class="page-head"><span class="eyebrow">Collection three</span><h1>Venues</h1>
+   <p class="lead">Places to hold a wedding, a retreat, a company off-site or a photoshoot, each away from the usual circuit.</p></header>
+  <div class="chips" id="uChips" style="margin-bottom:14px"><button type="button" class="chip" data-use="" aria-pressed="true">All occasions</button>${Object.entries(USE_LABEL).map(([k,l])=>`<button type="button" class="chip" data-use="${k}" aria-pressed="false">${l}</button>`).join("")}</div>
+  <div class="filters" style="grid-template-columns:minmax(0,260px)"><label class="field"><span>Guest count</span><select id="uCap">${opts([[0,"Any size"],[50,"50 or more"],[100,"100 or more"],[200,"200 or more"]],0)}</select></label></div>
+  <div class="resultbar"><span class="mono" id="uCount"></span><a class="btn ghost small" href="#help">Ask about a venue</a></div>
+  <div id="uResults"></div><div style="height:72px"></div></div>`,
+ mount(el){const draw=()=>{const list=VENUES.filter(v=>(!use||v.uses.includes(use))&&v.cap>=cap);$("#uCount").textContent=list.length+" of "+VENUES.length+" venues";
+   el.querySelectorAll("[data-use]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.use===use));
+   $("#uResults").innerHTML=list.length?`<div class="cards">${list.map(venueCard).join("")}</div>`:`<div class="note">No venue of that size for this occasion. Try a smaller guest count.</div>`;paint();};
+  el.querySelectorAll("[data-use]").forEach(b=>b.addEventListener("click",()=>{use=b.dataset.use;draw();}));$("#uCap").addEventListener("change",e=>{cap=+e.target.value;draw();});draw();}};
+}
+/* ---------- entry pages (villa, small stay, venue) ---------- */
+const SETTING_NOTE={hills:"Set in open countryside. You will want a car for shops and restaurants.",coast:"Close to the water. Expect steps, sea air and the occasional boat horn.",
+ mountain:"At altitude. Evenings are cool even in August, and winter access may need snow tyres.",city:"In the historic centre. Streets are closed to visitor traffic, so you arrive on foot from the nearest car park.",lake:"On the lake shore, with ferries linking the nearby towns."};
+const SETTING_EXTRA={hills:"Wood-fired oven",coast:"Sea access",mountain:"Wood stove",city:"Air conditioning",lake:"Private jetty"};
+const isMember=()=>store.get("member",false)===true;
+const addDays=(iso,d)=>{const t=new Date(iso+"T12:00:00");if(isNaN(t))return"";t.setDate(t.getDate()+d);return t.toISOString().slice(0,10);};
+const nights=(a,b)=>{const x=new Date(a+"T12:00:00"),y=new Date(b+"T12:00:00");return isNaN(x)||isNaN(y)?0:Math.round((y-x)/864e5);};
+const cleaning=v=>120+v.beds*50, secDep=v=>v.price>=6000?1000:500;
+
+function vEntry(o){
+ const back={villa:["villas","Villas"],stay:["stays","Small stays"],venue:["venues","Venues"]}[o.kind];
+ const facts=o.kind==="villa"?`<span><b>${o.guests}</b>guests</span><span><b>${o.beds}</b>bedrooms</span><span><b>${o.baths}</b>bathrooms</span>`
+  :o.kind==="stay"?`<span><b>${o.rooms}</b>${o.rooms===1?"room":"rooms"}</span><span><b>${eur(o.price)}</b>a night, from</span>`
+  :`<span><b>${o.cap}</b>guests at most</span>`;
+ const amen=o.kind==="villa"?["Wifi","Fully equipped kitchen","Bed linen and towels","Washing machine",o.setting==="city"?"Paid parking nearby":"Private parking",SETTING_EXTRA[o.setting],
+   ...(o.flags.includes("pool")?["Private pool, May to September"]:[]),...(o.flags.includes("chef")?["Chef on request"]:[]),...(o.flags.includes("dogs")?["Dogs welcome"]:[])]:[];
+ const main=o.kind==="villa"?`
+  <section class="block" id="b-house"><h2>The house</h2><div class="prose"><p>${esc(o.note)}</p><p>It sleeps ${o.guests} in ${o.beds} bedrooms, with ${o.baths} bathrooms. ${SETTING_NOTE[o.setting]}</p></div></section>
+  <section class="block" id="b-amen"><h2>Amenities</h2><ul class="amen">${amen.map(a=>`<li>${esc(a)}</li>`).join("")}</ul></section>
+  <section class="block" id="b-price"><h2>Prices and policies</h2>
+   <dl class="kv"><dt>Weekly rate, from</dt><dd>${eur(o.price)}</dd><dt>Minimum stay</dt><dd>7 nights</dd><dt>Included</dt><dd>Water, electricity, taxes</dd>
+    <dt>End-of-stay cleaning</dt><dd>${eur(cleaning(o))}</dd><dt>Security deposit, refundable</dt><dd>${eur(secDep(o))}</dd><dt>Check-in / check-out</dt><dd>from 16:00 / by 10:00</dd>
+    <dt>Deposit to confirm</dt><dd>30% within 2 working days</dd><dt>Balance due</dt><dd>60 days before arrival</dd><dt>Cancelling 60+ days ahead</dt><dd>50% of payments refunded</dd><dt>Cancelling inside 60 days</dt><dd>No refund</dd></dl>
+   <p class="muted" style="font-size:15px">Sample terms for this template. Replace them with each owner's real conditions.</p></section>
+  <section class="block" id="b-way"><h2>Getting there</h2><div class="prose"><p>Nearest airports: ${esc(REGION_INFO[o.region]||"ask us")}.</p><p>The exact address is shared once the booking is confirmed.</p></div></section>`
+ :o.kind==="stay"?`
+  <section class="block" id="b-house"><h2>The place</h2><div class="prose"><p>${esc(o.note)}</p><p>${esc(o.type)} with ${o.rooms} ${o.rooms===1?"room":"rooms"}. ${SETTING_NOTE[o.setting]}</p></div></section>
+  <section class="block" id="b-way"><h2>Getting there</h2><div class="prose"><p>Nearest airports: ${esc(REGION_INFO[o.region]||"ask us")}.</p></div></section>`
+ :`<section class="block" id="b-house"><h2>The venue</h2><div class="prose"><p>${esc(o.note)}</p><p>${SETTING_NOTE[o.setting]}</p></div></section>
+  <section class="block" id="b-price"><h2>At a glance</h2><dl class="kv"><dt>Capacity</dt><dd>${o.cap} guests</dd><dt>Suited to</dt><dd>${o.uses.map(u=>USE_LABEL[u]).join(", ")}</dd><dt>Region</dt><dd>${esc(o.region)}</dd><dt>Nearest airports</dt><dd>${esc(REGION_INFO[o.region]||"")}</dd></dl></section>`;
+ const dep=F.arrive?addDays(F.arrive,7):"";
+ const aside=o.kind==="villa"?`<form class="book" id="bookForm"><div class="from">from <b>${eur(o.price)}</b> a week</div>
+   <div class="two"><label class="field"><span>Arrive</span><input type="date" id="bkIn" value="${esc(F.arrive)}" required></label><label class="field"><span>Depart</span><input type="date" id="bkOut" value="${dep}" required></label></div>
+   <label class="field"><span>Guests</span><select id="bkGuests">${opts(Array.from({length:o.guests},(_,i)=>i+1),Math.min(o.guests,F.guests||2))}</select></label>
+   <div class="est" id="bkEst"></div>
+   <label class="field"><span>Full name</span><input id="bkName" required autocomplete="name"></label>
+   <label class="field"><span>Email</span><input type="email" id="bkEmail" required autocomplete="email"></label>
+   <label class="field"><span>Remarks, optional</span><textarea id="bkNote" placeholder="Cot, arrival time, a birthday..."></textarea></label>
+   <label class="check"><input type="checkbox" id="bkTerms" required><span>I agree to the <a href="#terms">terms</a></span></label>
+   <button class="btn" type="submit">Send booking request</button><div id="bkMsg" class="note ok" hidden></div>
+   <p class="muted" style="font-size:14px">Nothing is charged with a request.</p></form>`
+ :o.kind==="stay"?`<div class="book"><div class="from">from <b>${eur(o.price)}</b> a night</div><span class="eyebrow">Booking contact</span>
+   ${isMember()?`<p>owner-${pad(o.n)}@example.com</p><p class="muted" style="font-size:14px">Placeholder address. Members book directly with the owner.</p>`
+    :`<p>Shown to members. Membership is free and takes a minute.</p><a class="btn" href="#membership">Join to see contact</a>`}</div>`
+ :`<form class="book" id="bookForm"><span class="eyebrow">Enquire about ${num(o.n)}</span>
+   <div class="two"><label class="field"><span>Date</span><input type="date" id="vqDate"></label><label class="field"><span>Guests</span><input type="number" id="vqGuests" min="1" max="${o.cap}" placeholder="${Math.round(o.cap/2)}"></label></div>
+   <label class="field"><span>Occasion</span><select id="vqUse">${opts(o.uses.map(u=>[u,USE_LABEL[u]]),o.uses[0])}</select></label>
+   <label class="field"><span>Full name</span><input id="vqName" required></label><label class="field"><span>Email</span><input type="email" id="vqEmail" required></label>
+   <label class="field"><span>Tell us more</span><textarea id="vqNote"></textarea></label>
+   <button class="btn" type="submit">Send enquiry</button><div id="bkMsg" class="note ok" hidden></div></form>`;
+ const tabs=o.kind==="villa"?[["b-house","The house"],["b-amen","Amenities"],["b-price","Prices and policies"],["b-way","Getting there"]]:o.kind==="stay"?[["b-house","The place"],["b-way","Getting there"]]:[["b-house","The venue"],["b-price","At a glance"]];
+ return {html:`<div class="wrap">
+  <div class="crumbs mono"><a href="#${back[0]}">${back[1]}</a><span>/</span><span>${esc(o.region)}</span><span>/</span><span>${num(o.n)}</span></div>
+  <header class="entry-head"><span class="eyebrow">${num(o.n)} · ${esc(o.region)} · ${SETTING_LABEL[o.setting]}</span><h1>${esc(o.name)}</h1><div class="keyfacts">${facts}</div></header>
+  <div class="gallery">${plate(o,0,960,720)}<div class="side">${plate(o,1,640,480)}${plate(o,2,640,480)}</div></div>
+  <div class="subnav">${tabs.map(t=>`<button type="button" data-go="${t[0]}">${t[1]}</button>`).join("")}</div>
+  <div class="entry"><div class="entry-main">${main}</div><aside>${aside}</aside></div></div>`,
+ mount(el){
+  el.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{const t=document.getElementById(b.dataset.go);t&&t.scrollIntoView({behavior:"smooth",block:"start"});}));
+  const f=$("#bookForm",el);if(!f)return;
+  if(o.kind==="villa"){const est=()=>{const a=$("#bkIn").value,b=$("#bkOut").value,n=nights(a,b),E=$("#bkEst");
+    if(!a||!b){E.innerHTML=`<span class="muted">Choose dates to see an estimate.</span>`;return;}
+    if(n<7){E.innerHTML=`<span>Minimum stay is 7 nights. These dates cover ${Math.max(n,0)}.</span>`;return;}
+    const rent=o.price/7*n,tot=rent+cleaning(o);
+    E.innerHTML=`<div><span>${n} nights</span><span>${eur(rent)}</span></div><div><span>Cleaning</span><span>${eur(cleaning(o))}</span></div><div class="total"><span>Estimated total</span><span>${eur(tot)}</span></div><div class="muted"><span>Deposit to confirm, 30%</span><span>${eur(tot*.3)}</span></div><span class="muted" style="font-size:13.5px">Low-season estimate. The owner confirms the exact price.</span>`;};
+   $("#bkIn").addEventListener("change",e=>{F.arrive=e.target.value;saveF();if(!$("#bkOut").value||nights(e.target.value,$("#bkOut").value)<7)$("#bkOut").value=addDays(e.target.value,7);est();});
+   $("#bkOut").addEventListener("change",est);est();}
+  f.addEventListener("submit",e=>{e.preventDefault();const m=$("#bkMsg");m.textContent="Request captured in this demo. Nothing was sent to anyone.";m.hidden=false;});
+ }};
+}
+
+/* ---------- journal, membership, about, help, terms ---------- */
+function vJournal(tab){
+ return {html:`<div class="wrap"><header class="page-head"><span class="eyebrow">Journal</span><h1>${tab==="guides"?"Travel guides":"Articles"}</h1>
+   <p class="lead">${tab==="guides"?"Region by region: where we eat, walk and shop near the houses.":"People, food and journeys from the places in the catalogue."}</p>
+   <div class="chips"><a class="chip${tab==="articles"?" on":""}" href="#journal">Articles<span class="mono">${ARTICLES.length}</span></a><a class="chip${tab==="guides"?" on":""}" href="#guides">Travel guides<span class="mono">${GUIDES.length}</span></a></div></header>
+  <div class="rows">${tab==="guides"?GUIDES.map(g=>`<a class="rowlink" href="#membership"><span class="eyebrow">${esc(g.region)}</span><h3>${esc(g.title)}</h3><span class="mono muted">${g.places} places</span><p>${isMember()?"Open to you as a member.":"Full guide for members. Joining is free."}</p></a>`).join(""):ARTICLES.map(articleRow).join("")}</div>
+  <p class="muted" style="padding-block:24px 72px;font-size:15px">Sample headlines. Article pages are not part of this template yet.</p></div>`};
+}
+function vMembership(){
+ return {html:`<div class="wrap"><header class="page-head"><span class="eyebrow">Membership · free for now</span><h1>Join the address book</h1></header>
+  <div class="split" style="padding-bottom:72px"><div class="stack prose">
+    <p class="lead">Members get the parts of the catalogue we do not publish openly.</p>
+    <ul class="amen" style="grid-template-columns:1fr"><li>Booking contacts for all ${STAYS.length} small stays, to book directly with the owner</li><li>All ${GUIDES.length} regional travel guides</li><li>The monthly letter, with new houses before they are listed</li><li>No fee, and you can leave at any time</li></ul></div>
+   <div class="stack">${isMember()?`<div class="note ok">You are a member in this demo. Small-stay contacts and guides are unlocked on this device.</div><div><button class="btn ghost" id="leaveBtn" type="button">Leave demo membership</button></div>`
+    :`<form class="form" id="joinForm"><h3>Sign up</h3><label class="field"><span>Full name</span><input id="mbName" required autocomplete="name"></label><label class="field"><span>Email</span><input type="email" id="mbEmail" required autocomplete="email"></label>
+     <label class="check"><input type="checkbox" id="mbNews" checked><span>Send me the monthly letter</span></label><label class="check"><input type="checkbox" id="mbTerms" required><span>I agree to the <a href="#terms">terms</a></span></label>
+     <button class="btn" type="submit">Join free</button><p class="muted" style="font-size:14px">Demo only: this unlocks member views in your browser and sends nothing.</p></form>`}
+    <p class="muted" style="font-size:15px">Already a member or a property owner? A sign-in page belongs here.</p></div></div></div>`,
+ mount(){const j=$("#joinForm");j&&j.addEventListener("submit",e=>{e.preventDefault();store.set("member",true);go("membership");});const l=$("#leaveBtn");l&&l.addEventListener("click",()=>{store.set("member",false);go("membership");});}};
+}
+function vAbout(){
+ const people=[["Team member one","Founder, bookings","Piemonte","Vitello tonnato"],["Team member two","Founder, editor","Sicily","Pasta alla Norma"],["Team member three","Photographer","Liguria","Focaccia, still warm"],["Team member four","Design","Puglia","Orecchiette"]];
+ return {html:`<div class="wrap"><header class="page-head"><span class="eyebrow">About and press</span><h1>A catalogue kept <em>small</em> on purpose</h1></header>
+  <div class="split" style="padding-bottom:56px"><div class="prose">
+    <p class="lead">Olivara is a sample brand for this template: an independent travel platform and journal about Italy.</p>
+    <p>We list a house only after staying in it and meeting the person who owns it. Most places that apply are not added. The ones that are tend to have a long history, a strong hand behind the interiors, or a setting we could not stop talking about.</p>
+    <h3>How a place gets listed</h3><p>We visit in person. We check that the photographs match the house. We agree a price with the owner that is the same as booking with them directly.</p>
+    <h3>More than rental</h3><p>Around each house we collect the addresses we would give a friend: the market, the trattoria, the walk. Those go into the journal and the travel guides.</p></div>
+   <div class="stack"><div class="plate">${plate(VILLAS[6],3,640,480)}</div><span class="mono muted">${num(7)} · where a first visit became a second</span></div></div>
+  <section class="sec"><div class="sec-head"><div><span class="eyebrow">The team</span><h2>Who answers your email</h2></div></div>
+   <div class="people">${people.map(p=>`<div class="person"><h3>${p[0]}</h3><span class="muted">${p[1]}</span><dl><dt>Favourite region</dt><dd>${p[2]}</dd><dt>Always orders</dt><dd>${p[3]}</dd></dl></div>`).join("")}</div></section>
+  <section class="sec"><div class="sec-head"><div><span class="eyebrow">Work with us</span><h2>Owners, brands and press</h2></div><a class="btn ghost" href="#help">Get in touch</a></div>
+   <div class="cols3"><div class="way"><h3>List your property</h3><p>Send photographs and a few lines about the house. We reply when a place fits the catalogue.</p></div>
+    <div class="way"><h3>Content studio</h3><p>Photography, editorial and social content for hospitality brands and independent makers.</p></div>
+    <div class="way"><h3>Press</h3><p>Coverage and press kit go here. Replace the placeholder publication names on the home page.</p></div></div></section></div>`};
+}
+function vHelp(){
+ return {html:`<div class="wrap"><header class="page-head"><span class="eyebrow">Contact and FAQ</span><h1>Talk to a person</h1><p class="lead">Tell us dates, group size and the kind of place you have in mind. We answer every message ourselves.</p></header>
+  <div class="split" style="padding-bottom:56px"><div class="stack">
+    <dl class="contact-list"><div><dt>Email, answered within 24 hours</dt><dd>hello@example.com</dd></div><div><dt>WhatsApp, also outside office hours</dt><dd>+00 000 000 0000</dd></div><div><dt>Office</dt><dd>Your street and city</dd></div></dl>
+    <p class="muted" style="font-size:15px">Placeholder details. Replace them with your own.</p></div>
+   <form class="form" id="contactForm"><label class="field"><span>Topic</span><select id="ctTopic">${opts(["Travel advice","A booking question","List my property","Venue enquiry","Press or partnership"],"Travel advice")}</select></label>
+    <div class="two"><label class="field"><span>Full name</span><input id="ctName" required autocomplete="name"></label><label class="field"><span>Email</span><input type="email" id="ctEmail" required autocomplete="email"></label></div>
+    <label class="field"><span>Message</span><textarea id="ctMsg" required placeholder="Dates, how flexible they are, region, number of guests..."></textarea></label>
+    <label class="check"><input type="checkbox" id="ctNews"><span>Also send me the monthly letter</span></label>
+    <div><button class="btn" type="submit">Send message</button></div><div id="ctOut" class="note ok" hidden></div></form></div>
+  <section class="sec" style="padding-bottom:72px"><div class="sec-head"><div><span class="eyebrow">Frequently asked</span><h2>Answers by topic</h2></div></div>
+   <div class="split">${[FAQ.slice(0,2),FAQ.slice(2)].map(col=>`<div class="stack" style="gap:36px">${col.map(([t,qs])=>`<div><span class="eyebrow" style="display:block;margin-bottom:12px">${t}</span>${qs.map(([q,a])=>`<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}</div>`).join("")}</div>`).join("")}</div></section></div>`,
+ mount(){demoForm("#contactForm","#ctOut","Message captured in this demo. Nothing was sent to anyone.");}};
+}
+function vTerms(){
+ return {html:`<div class="wrap"><header class="page-head"><span class="eyebrow">Policies</span><h1>Terms, privacy, cookies</h1></header>
+  <div class="prose" style="padding-bottom:72px"><div class="note">Placeholder page. Add your own legal text before using this template for a real business.</div>
+   <h3>Terms and conditions</h3><p>Booking conditions, payment schedule, cancellation, liability and house rules belong here. The sample figures used across this template are a 30% deposit, the balance 60 days before arrival, and a refundable security deposit per house.</p>
+   <h3>Privacy</h3><p>Describe what personal data you collect through the booking, contact and membership forms, why, and for how long.</p>
+   <h3>Cookies</h3><p>This demo sets no tracking cookies. It keeps your filter choices and demo membership in this browser only.</p></div></div>`};
+}
+
+/* ---------- router ---------- */
+const app=document.getElementById("app");
+const ROUTES={home:vHome,villas:vVillas,stays:vStays,venues:vVenues,journal:()=>vJournal("articles"),guides:()=>vJournal("guides"),membership:vMembership,about:vAbout,help:vHelp,terms:vTerms};
+let cur=(location.hash||"#home").slice(1)||"home";
+function render(){
+ let view=null,nav=cur;const m=cur.match(/^(villa|stay|venue)-(\d{3})$/);
+ if(m){const o={villa:VILLAS,stay:STAYS,venue:VENUES}[m[1]].find(x=>x.n===+m[2]);if(o)view=vEntry(o);nav=m[1]==="villa"?"villas":m[1]+"s";}
+ else if(ROUTES[cur])view=ROUTES[cur]();
+ if(!view){cur="home";nav="home";view=vHome();}
+ if(nav==="guides")nav="journal";
+ app.innerHTML=view.html;app.classList.remove("enter");void app.offsetWidth;app.classList.add("enter");if(view.mount)view.mount(app);paint();
+ document.querySelectorAll(".nav a").forEach(a=>a.classList.toggle("on",a.dataset.r===nav));
+ const top=document.getElementById("top");top.classList.remove("open");document.getElementById("menuBtn").setAttribute("aria-expanded","false");
+}
+function go(h){cur=h||"home";try{history.pushState(null,"","#"+cur);}catch(e){}render();window.scrollTo(0,0);}
+document.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a||e.metaKey||e.ctrlKey)return;e.preventDefault();go(a.getAttribute("href").slice(1));});
+window.addEventListener("popstate",()=>{cur=(location.hash||"#home").slice(1)||"home";render();});
+document.getElementById("menuBtn").addEventListener("click",e=>{const o=document.getElementById("top").classList.toggle("open");e.currentTarget.setAttribute("aria-expanded",o);});
+document.getElementById("themeBtn").addEventListener("click",()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark";});
+render();
+</script>
+</body>
+</html>
